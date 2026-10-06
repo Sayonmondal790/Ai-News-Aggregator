@@ -104,7 +104,7 @@ export default function App() {
                     </div>
 
                     {classifications[article.id] && (
-                      <div className={`badge ${classifications[article.id].label.toLowerCase()}`}>
+                      <div className={`badge ${classifications[article.id]?.label.toLowerCase()}`}>
                         <strong>{classifications[article.id].label}</strong> ({(classifications[article.id].confidence * 100).toFixed(1)}%)
                       </div>
                     )}
