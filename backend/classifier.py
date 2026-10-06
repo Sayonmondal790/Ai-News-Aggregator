@@ -1,31 +1,24 @@
-from transformers import pipeline
+import requests
+import os
 
-class ArticleClassifier:
-    def __init__(self):
-        # Using the heavy, highly accurate BART model
-        self.classifier = pipeline(
-            "zero-shot-classification", 
-            model="facebook/bart-large-mnli"
-        )
-        self.labels = ["factual reporting", "personal opinion"]
+# This points to the exact same model you were using locally
+API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-mnli"
 
-    def classify_text(self, text: str) -> dict:
-        truncated_text = text[:800]
-        result = self.classifier(truncated_text, candidate_labels=self.labels)
-        
-        is_opinion = result['labels'][0] == "personal opinion"
-        
-        return {
-            "label": "Opinion" if is_opinion else "Fact",
-            "confidence": round(result['scores'][0], 3)
-        }
+# Render will pass your secure token into os.getenv()
+headers = {"Authorization": f"Bearer {os.getenv('HF_TOKEN')}"}
 
-if __name__ == "__main__":
-    print("Downloading & Loading Heavy NLP Model (this will take a few minutes)...")
-    nlp = ArticleClassifier()
+def categorize_news(text, labels=["politics", "technology", "sports", "business"]):
+    payload = {
+        "inputs": text,
+        "parameters": {"candidate_labels": labels}
+    }
     
-    test_opinion = "In my view, the latest economic policies are a complete disaster and show a total lack of leadership from the government."
-    print(f"\nTest 1 (Expected: Opinion): {nlp.classify_text(test_opinion)}")
+    # Send the text to Hugging Face instead of processing it on Render
+    response = requests.post(API_URL, headers=headers, json=payload)
+    result = response.json()
     
-    test_fact = "The central bank announced a 0.5% interest rate hike on Wednesday, aiming to curb rising inflation levels across the country."
-    print(f"Test 2 (Expected: Fact): {nlp.classify_text(test_fact)}")
+    # Return the highest scoring label
+    if "labels" in result:
+        return result["labels"][0]
+    
+    return "uncategorized"
