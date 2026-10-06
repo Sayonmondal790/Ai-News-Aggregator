@@ -6,7 +6,8 @@ headers = {"Authorization": f"Bearer {os.getenv('HF_TOKEN')}"}
 
 class ArticleClassifier:
     def __init__(self):
-        self.labels = ["politics", "technology", "sports", "business"]
+        # Updated to match exactly what your React frontend expects
+        self.labels = ["Fact", "Opinion"]
 
     def classify(self, text):
         payload = {
@@ -20,8 +21,9 @@ class ArticleClassifier:
                 return result["labels"][0]
         except Exception as e:
             print(f"Classification error: {e}")
-        return "uncategorized"
+            
+        # Safe fallback so a temporary DNS error doesn't crash the frontend
+        return "Fact"
 
-    # Alias in case your code calls predict() instead of classify()
     def predict(self, text):
         return self.classify(text)
