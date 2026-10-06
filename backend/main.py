@@ -45,5 +45,5 @@ def classify(article_id: int):
         return {"error": "Article not found"}
         
     text = article.iloc[0]['full_text']
-    result = nlp.classify_text(text)
+    result = nlp.classify(text)
     return {"article_id": article_id, "classification": result}
