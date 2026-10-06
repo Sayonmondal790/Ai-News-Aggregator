@@ -25,8 +25,12 @@ def read_root():
 
 @app.get("/api/news")
 def get_latest_news():
-    """Returns the top 5 articles from our cached data."""
+    """Returns the top 50 articles from our cached data."""
     df = pd.read_csv("news_cache.csv")
+    
+    # Replace NaN values with empty strings to prevent JSON crashes
+    df = df.fillna("")
+    
     return df.head(50).to_dict(orient="records")
 
 @app.get("/api/recommend/{article_id}")
