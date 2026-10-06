@@ -1,0 +1,244 @@
+:root {
+  --bg-color: #09090b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --card-bg: #1e293b;
+  --border-color: #334155;
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --secondary: transparent;
+  --secondary-hover: #334155;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+}
+
+/* Fix the WebGL canvas to the background */
+.background-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;          /* Pushes it behind all other content */
+  pointer-events: none; /* Prevents it from blocking clicks to your news cards */
+}
+
+/* Ensure the main container sits properly on top of the background */
+.container {
+  position: relative;
+  z-index: 10;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+  padding-bottom: 0.1em;
+  background: linear-gradient(to right, #60a5fa, #c084fc);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.header {
+  text-align: center;
+  margin: 0 auto 3rem auto;
+  padding: 2rem;
+  max-width: 700px;
+  background: rgba(30, 41, 59, 0.6); /* Semi-transparent dark panel */
+  backdrop-filter: blur(12px);       /* Frosted glass blur */
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+}
+
+.layout {
+  display: block; /* Removed the old 2-column split screen */
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* The New Side-by-Side Grid */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.5rem;
+}
+
+.news-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px; /* Slightly softer corners match the glow better */
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease; /* Tells the browser to animate any changes smoothly */
+}
+
+.news-card:hover {
+  transform: translateY(-8px); /* Lifts the card up slightly */
+  border-color: #60a5fa; /* Highlights the border in blue */
+  box-shadow: 0 15px 35px -10px rgba(96, 165, 250, 0.4); /* Creates the blue glowing aura */
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.source-tag {
+  color: #60a5fa;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.news-card h3 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.summary {
+  color: var(--text-muted);
+  line-height: 1.6;
+  flex-grow: 1; /* Ensures buttons stick to the bottom evenly across all cards */
+}
+
+.card-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+  flex: 1; /* Makes buttons equal width next to each other */
+}
+
+button:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+button.secondary {
+  background: var(--secondary);
+  border: 1px solid var(--border-color);
+}
+
+button.secondary:hover:not(:disabled) {
+  background: var(--secondary-hover);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.badge {
+  margin-top: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background: #064e3b;
+  color: #34d399;
+  display: inline-block;
+  text-align: center;
+}
+
+/* Modal / Popup Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 2rem;
+  padding: 0;
+  border: none;
+  width: auto;
+  flex: none;
+  line-height: 1;
+}
+
+.close-button:hover {
+  background: transparent;
+  color: var(--text-main);
+}
+
+.sidebar-hint {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.rec-card {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.rec-card:last-child {
+  border-bottom: none;
+}
+
+.rec-card h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.score-tag {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
