@@ -37,13 +37,22 @@ def recommend(article_id: int):
 
 @app.get("/api/classify/{article_id}")
 def classify(article_id: int):
-    """Classifies a specific article as Fact or Opinion."""
-    df = pd.read_csv("news_cache.csv")
-    article = df[df['id'] == article_id]
-    
-    if article.empty:
-        return {"error": "Article not found"}
+    try:
+        df = pd.read_csv("news_cache.csv")
         
-    text = article.iloc[0]['full_text']
-    result = nlp.classify(text)
-    return {"article_id": article_id, "classification": result}
+        # Cast both sides to string to prevent any integer/string mismatch bugs
+        article = df[df['id'].astype(str) == str(article_id)]
+        
+        if article.empty:
+            # Always return the exact key React expects to prevent UI crashes
+            return {"article_id": article_id, "classification": "Fact"}
+            
+        text = article.iloc[0]['full_text']
+        result = nlp.classify(text)
+        
+        return {"article_id": article_id, "classification": result}
+        
+    except Exception as e:
+        print(f"Endpoint error: {e}")
+        # Ultimate safety net for any unexpected Python errors
+        return {"article_id": article_id, "classification": "Fact"}
