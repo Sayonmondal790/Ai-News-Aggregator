@@ -1,24 +1,27 @@
-import requests
 import os
+import requests
 
-# This points to the exact same model you were using locally
 API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-mnli"
-
-# Render will pass your secure token into os.getenv()
 headers = {"Authorization": f"Bearer {os.getenv('HF_TOKEN')}"}
 
-def categorize_news(text, labels=["politics", "technology", "sports", "business"]):
-    payload = {
-        "inputs": text,
-        "parameters": {"candidate_labels": labels}
-    }
-    
-    # Send the text to Hugging Face instead of processing it on Render
-    response = requests.post(API_URL, headers=headers, json=payload)
-    result = response.json()
-    
-    # Return the highest scoring label
-    if "labels" in result:
-        return result["labels"][0]
-    
-    return "uncategorized"
+class ArticleClassifier:
+    def __init__(self):
+        self.labels = ["politics", "technology", "sports", "business"]
+
+    def classify(self, text):
+        payload = {
+            "inputs": text,
+            "parameters": {"candidate_labels": self.labels}
+        }
+        try:
+            response = requests.post(API_URL, headers=headers, json=payload, timeout=10)
+            result = response.json()
+            if isinstance(result, dict) and "labels" in result:
+                return result["labels"][0]
+        except Exception as e:
+            print(f"Classification error: {e}")
+        return "uncategorized"
+
+    # Alias in case your code calls predict() instead of classify()
+    def predict(self, text):
+        return self.classify(text)
