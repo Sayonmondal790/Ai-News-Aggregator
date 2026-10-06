@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import Lightfall from './Lightfall.jsx';
 
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = "https://ai-news-aggregator-fjwn.onrender.com";
 
 export default function App() {
   const [articles, setArticles] = useState([]);
