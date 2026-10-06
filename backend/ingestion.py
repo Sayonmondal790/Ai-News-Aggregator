@@ -3,12 +3,12 @@ import pandas as pd
 from datetime import datetime
 import re
 
-# RSS Feeds across diverse categories
+# RSS Feeds across diverse categories (Updated to Times of India)
 RSS_FEEDS = {
-    "Technology": "http://feeds.bbci.co.uk/news/technology/rss.xml",
-    "Business": "http://feeds.bbci.co.uk/news/business/rss.xml",
-    "General": "http://feeds.bbci.co.uk/news/rss.xml",
-    "World": "http://feeds.bbci.co.uk/news/world/rss.xml"
+    "Technology": "https://timesofindia.indiatimes.com/rssfeeds/5880659.cms",
+    "Business": "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
+    "General": "https://timesofindia.indiatimes.com/rssfeedstopstories.cms",
+    "World": "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms"
 }
 
 def clean_html(text: str) -> str:
@@ -48,7 +48,7 @@ def fetch_live_news() -> pd.DataFrame:
                     "summary": summary,
                     "full_text": full_text,
                     "category": category,
-                    "source": feed.feed.get('title', 'BBC News'),
+                    "source": feed.feed.get('title', 'Times of India'),
                     "url": link,
                     "published": published,
                     "reading_time_min": read_time
